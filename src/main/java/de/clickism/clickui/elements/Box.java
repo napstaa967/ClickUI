@@ -253,11 +253,11 @@ public class Box extends UiElement<Box> {
         var y1 = bounds.y();
         var x2 = bounds.x() + bounds.width();
         var y2 = bounds.y() + bounds.height();
-        // TODO: Fix nested scissor not working properly, way to transform coordinates
         graphics.enableScissor(x1, y1, x2, y2);
 
         graphics.pose().pushPose();
         // Apply scroll offset
+        scrollY(scrollY); // Clamp scrollY to valid range
         graphics.pose().translate(0, -scrollY, 0);
 
         // Render children
