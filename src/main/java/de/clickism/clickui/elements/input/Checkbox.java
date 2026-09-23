@@ -17,10 +17,37 @@ public class Checkbox extends UiElement<Checkbox> {
     /**
      * The checkbox texture to render.
      */
-    public static final ResourceLocation TEXTURE = ResourceLocation.tryBuild(
+    //? if < 1.21 {
+    /*public static final ResourceLocation TEXTURE = ResourceLocation.tryBuild(
         ResourceLocation.DEFAULT_NAMESPACE,
         "textures/gui/checkbox.png"
     );
+    *///?} elif >= 1.21 {
+    private static final ResourceLocation TEXTURE_BOTH = ResourceLocation.withDefaultNamespace("widget/checkbox_selected_highlighted");
+    private static final ResourceLocation TEXTURE_SELECTED = ResourceLocation.withDefaultNamespace("widget/checkbox_selected");
+    private static final ResourceLocation TEXTURE_HIGHLIGHTED = ResourceLocation.withDefaultNamespace("widget/checkbox_highlighted");
+    private static final ResourceLocation TEXTURE = ResourceLocation.withDefaultNamespace("widget/checkbox");
+    /*private static final ResourceLocation TEXTURE_BOTH = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
+    private static final ResourceLocation TEXTURE_SELECTED = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
+    private static final ResourceLocation TEXTURE_HIGHLIGHTED = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");*/
+
+    /**
+     * Returns the proper texture for this state
+     */
+    private ResourceLocation resolve() {
+        if (!state().disabled()) {
+            if (state().hovered() && checked) {
+                return TEXTURE_BOTH;
+            } else if (state().hovered()) {
+                return TEXTURE_HIGHLIGHTED;
+            } else if (checked) {
+                return TEXTURE_SELECTED;
+            }
+        }
+        return TEXTURE;
+    }
+    //?}
 
     private static final int SIZE = 20;
 
@@ -102,7 +129,8 @@ public class Checkbox extends UiElement<Checkbox> {
         graphics.pose().scale((float) bounds.width() / SIZE, (float) bounds.height() / SIZE, 1.0F);
         graphics.pose().translate(-bounds.x(), -bounds.y(), 0.0F);
         // Render the checkbox texture based on its state (focused and checked)
-        graphics.blit(
+        //? if < 1.21 {
+        /*graphics.blit(
             TEXTURE,
             bounds.x(),
             bounds.y(),
@@ -115,6 +143,9 @@ public class Checkbox extends UiElement<Checkbox> {
             64,
             64
         );
+        *///?} elif >= 1.21 {
+        graphics.blitSprite(resolve(), bounds.x(), bounds.y(), SIZE, SIZE);
+        //?}
         graphics.pose().popPose();
     }
 }

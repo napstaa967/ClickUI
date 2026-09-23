@@ -206,7 +206,7 @@ public abstract class UiEventHandler extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, /*? if >= 1.21 {*/ double hdelta, /*?}*/ double delta) {
         // Fire to all
         var event = new MouseScrollEvent(hoveredElement, (int) mouseX, (int) mouseY, delta, new EventState());
         return fireMouseEvent(event);

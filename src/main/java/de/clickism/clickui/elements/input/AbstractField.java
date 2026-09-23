@@ -4,7 +4,6 @@ import de.clickism.clickui.UiElement;
 import de.clickism.clickui.layout.Point;
 import de.clickism.clickui.render.RenderContext;
 import de.clickism.clickui.util.Util;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Mth;
@@ -16,6 +15,14 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+// Versioned dependencies
+//? if < 1.21{
+/*import net.minecraft.SharedConstants;
+*///?} elif >= 1.21 {
+import net.minecraft.util.StringUtil;
+//?}
+
 
 /**
  * An abstract class representing a text field UI element.
@@ -279,7 +286,11 @@ public abstract class AbstractField<S extends AbstractField<S>>
      */
     protected String applyFilter(String input) {
         // Remove invalid characters
-        input = SharedConstants.filterText(input, multiLine);
+        //? if < 1.21 {
+         /*input = SharedConstants.filterText(input, multiLine);
+        *///?} elif >= 1.21 {
+        input = StringUtil.filterText(input, multiLine);
+        //?}
         // Apply custom input filter
         input = inputFilter.apply(input);
         // Limit to max length

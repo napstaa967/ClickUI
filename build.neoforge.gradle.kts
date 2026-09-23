@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("net.neoforged.moddev.legacyforge") version "2.0.141"
+    id("net.neoforged.moddev") version "2.0.141"
     id("maven-publish")
 }
 val modVersion = property("mod.version").toString()
@@ -27,26 +27,26 @@ configurations {
     testCompileClasspath { extendsFrom(compileClasspath) }
 }
 
-legacyForge {
-    version = "${property("mod.minecraft_version")}-${property("deps.forge")}"
+neoForge {
+    version = "${property("deps.neoforge")}"
 
     addModdingDependenciesTo(sourceSets["testmod"])
 
     runs {
         register("client") {
             client()
-            gameDirectory = rootProject.file("runs/forge")
-            ideName = "Forge Client (${stonecutter.active?.version})"
+            gameDirectory = rootProject.file("runs/neoforge")
+            ideName = "Neoforge Client (${stonecutter.active?.version})"
             programArgument("--username=ClickToPlay")
         }
         register("server") {
             server()
-            gameDirectory = rootProject.file("runs/forge")
-            ideName = "Forge Server (${stonecutter.active?.version})"
+            gameDirectory = rootProject.file("runs/neoforge")
+            ideName = "Neoforge Server (${stonecutter.active?.version})"
         }
         register("testmodClient") {
             client()
-            gameDirectory = rootProject.file("runs/forge")
+            gameDirectory = rootProject.file("runs/neoforge")
             ideName = "Testmod Client (${stonecutter.active?.version})"
             sourceSet.set(sourceSets["testmod"])
         }
@@ -76,9 +76,9 @@ dependencies {
 //}
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 base {

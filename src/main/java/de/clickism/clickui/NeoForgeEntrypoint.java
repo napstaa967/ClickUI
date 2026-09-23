@@ -1,9 +1,9 @@
-//? if forge {
+//? if neoforge {
 /*package de.clickism.clickui;
 
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.Mod;
 
 @Mod("clickui")
-public class ForgeEntrypoint {
+public class NeoForgeEntrypoint {
 }
 *///?}

@@ -11,13 +11,19 @@ import de.clickism.clickui.style.Border;
 import de.clickism.clickui.style.StyleProperty;
 import de.clickism.clickui.util.Util;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-import static net.minecraft.client.gui.components.AbstractWidget.WIDGETS_LOCATION;
+//? if < 1.21
+//import static net.minecraft.client.gui.components.AbstractWidget.WIDGETS_LOCATION;
+//? if >= 1.21
+import net.minecraft.client.gui.components.WidgetSprites;
 
 /**
  * A simple UI element that can be clicked and displays a label.
  */
 public class Button extends UiElement<Button> {
+    //? if >= 1.21
+    private static final WidgetSprites SPRITES = new WidgetSprites(ResourceLocation.withDefaultNamespace("widget/button"), ResourceLocation.withDefaultNamespace("widget/button_disabled"), ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
     private static final int DEFAULT_HEIGHT = 20;
     private static final Padding DEFAULT_PADDING = Padding.create(4, 8);
 
@@ -179,11 +185,19 @@ public class Button extends UiElement<Button> {
         RenderSystem.defaultBlendFunc();
         // Render button texture
         try {
-            graphics.blitNineSliced(
+            //? if < 1.21 {
+            /*graphics.blitNineSliced(
                 WIDGETS_LOCATION,
                 bounds.x(), bounds.y(), bounds.width(), bounds.height(),
                 20, 4, 200, 20, 0, textureY()
             );
+            *///?} elif >= 1.21 {
+            graphics.blitSprite(
+                    SPRITES.get(!state().disabled(), state().focused() || state().hovered()),
+                    bounds.x(), bounds.y(), bounds.width(), bounds.height()
+            );
+            //?}
+
         } catch (Exception e) {
             // Log the error and continue rendering
             System.err.println("Error rendering button background: " + e.getMessage());

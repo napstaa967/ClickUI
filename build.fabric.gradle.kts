@@ -13,6 +13,7 @@ version = "$modVersion+$minecraftVersion-$loader"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven("https://maven.parchmentmc.org")
 }
 
 sourceSets {
@@ -46,9 +47,15 @@ loom {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    if (sc.current.parsed >= "1.21") {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    } else {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }
 
 base {
@@ -67,7 +74,14 @@ configurations {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered() {
+        officialMojangMappings()
+        if (sc.current.parsed >= "1.21") {
+            parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip")
+        } else {
+            parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+        }
+    })
 
     // Testmod-only dependencies
     "modTestmodImplementation"("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")

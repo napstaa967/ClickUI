@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("net.fabricmc.fabric-loom-remap") version "1.17-SNAPSHOT"
+    id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
     id("maven-publish")
 }
 val modVersion = property("mod.version").toString()
@@ -31,7 +31,7 @@ loom {
 //            programArguments.set(listOf("--username=ClickToPlay"))
 //        }
     }
-    createRemapConfigurations(sourceSets["testmod"])
+    //createRemapConfigurations(sourceSets["testmod"])
     mods {
         create("clickui-testmod") {
             sourceSet(sourceSets["testmod"])
@@ -47,14 +47,14 @@ loom {
 }
 
 java {
-    if (sc.current.parsed >= "1.21") {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+    if (sc.current.parsed >= "26.1") {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     } else {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 }
 
@@ -74,18 +74,10 @@ configurations {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.layered() {
-        officialMojangMappings()
-        if (sc.current.parsed >= "1.21") {
-            parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip")
-        } else {
-            parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
-        }
-    })
 
     // Testmod-only dependencies
-    "modTestmodImplementation"("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    "modTestmodImplementation"("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
+    "testImplementation"("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+    "testImplementation"("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 
     compileOnly("org.jetbrains:annotations:24.0.1")
     testImplementation(platform("org.junit:junit-bom:6.0.0"))

@@ -17,17 +17,27 @@ import org.lwjgl.glfw.GLFW;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-//?} else {
-/*import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
+//?} elif forge {
+//import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+//import net.minecraftforge.eventbus.api.SubscribeEvent;
+//import net.minecraftforge.fml.common.Mod;
+//import net.minecraftforge.common.MinecraftForge;
+//import net.minecraftforge.event.TickEvent;
+//?} elif neoforge {
+/*import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.bus.api.IEventBus;
 *///?}
 
 //? if fabric {
 public class TestMod implements ClientModInitializer, BaseComponents {
- //?} else {
+ //?} elif forge {
+/*@Mod("clickuitestmod")
+public class TestMod implements BaseComponents {
+ *///?} elif neoforge {
 /*@Mod("clickuitestmod")
 public class TestMod implements BaseComponents {
 *///?}
@@ -51,23 +61,27 @@ public class TestMod implements BaseComponents {
     }
     //?} else {
 
-    /*public TestMod() {
+    /*public TestMod(/^? if neoforge {^//^IEventBus modBus^//^?}^/) {
         openMenuKey = new KeyMapping(
             "key.clickuitestmod.open_menu",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_O,
             "key.categories.clickuitestmod"
         );
-        MinecraftForge.EVENT_BUS.register(this);
+        //? if forge
+        /^MinecraftForge.EVENT_BUS.register(this);^/
+        //? if neoforge {
+        /^NeoForge.EVENT_BUS.register(this);
+        modBus.addListener(this::registerKeys);
+        ^///?}
     }
 
-    @SubscribeEvent
     public void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(openMenuKey);
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
+    public void onClientTick(/^? if forge {^//^TickEvent.ClientTickEvent^//^?} elif neoforge {^/ /^PlayerTickEvent.Post ^//^?}^/ event) {
         while (openMenuKey.consumeClick()) {
             this.openTestScreen();
         }
