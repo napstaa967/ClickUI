@@ -119,5 +119,7 @@ stonecutter {
     replacements.string(sc.current.parsed >= "26.1") {
         replace("GuiGraphics", "GuiGraphicsExtractor")
         replace("ResourceLocation", "Identifier")
+        replace("pushPose", "pushMatrix")
+        replace("popPose", "popMatrix")
     }
 }

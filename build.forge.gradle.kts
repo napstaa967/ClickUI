@@ -114,3 +114,12 @@ publishing {
         }
     }
 }
+
+stonecutter {
+    replacements.string(sc.current.parsed < "26.1") {
+        replace("GuiGraphicsExtractor", "GuiGraphics")
+        replace("Identifier", "ResourceLocation")
+        replace("pushMatrix", "pushPose")
+        replace("popMatrix", "popPose")
+    }
+}

@@ -4,13 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.clickism.clickui.UiElement;
 import de.clickism.clickui.layout.Size;
 import de.clickism.clickui.render.RenderContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * A UI element that displays an image from a specified texture resource.
  */
 public class Image extends UiElement<Image> {
-    private ResourceLocation texture;
+    private Identifier texture;
     private final int width;
     private final int height;
 
@@ -21,7 +21,7 @@ public class Image extends UiElement<Image> {
      *
      * @param texture the resource location of the texture to display
      */
-    public Image(ResourceLocation texture, int width, int height) {
+    public Image(Identifier texture, int width, int height) {
         this.texture = texture;
         this.width = width;
         this.height = height;
@@ -44,7 +44,7 @@ public class Image extends UiElement<Image> {
      * @param texture the new texture resource location
      * @return this Image element for method chaining
      */
-    public Image texture(ResourceLocation texture) {
+    public Image texture(Identifier texture) {
         this.texture = texture;
         invalidateLayout();
         return this;
@@ -86,9 +86,9 @@ public class Image extends UiElement<Image> {
         var bounds = bounds();
         // Override render to enable blending for semi-transparent textures
         //? if < 26.1 {
-        RenderSystem.enableBlend();
+        /*RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        //?}
+        *///?}
         // Render image
         graphics.blit(
             texture,
@@ -100,6 +100,6 @@ public class Image extends UiElement<Image> {
         );
         // Revert blending
         //? if < 26.1
-        RenderSystem.disableBlend();
+        //RenderSystem.disableBlend();
     }
 }

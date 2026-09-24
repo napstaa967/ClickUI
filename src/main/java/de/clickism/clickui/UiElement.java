@@ -658,9 +658,9 @@ public abstract class UiElement<S extends UiElement<S>>
         var graphics = context.graphics();
         graphics
                 //? if < 26.1
-                .renderOutline(
+                //.renderOutline(
                 //? if >= 26.1
-                //.outline(
+                .outline(
             bounds().x(),
             bounds().y(),
             bounds().width(),

@@ -6,7 +6,7 @@ import de.clickism.clickui.elements.input.NumberField;
 import de.clickism.clickui.elements.input.TextField;
 import de.clickism.clickui.style.Style;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * A base interface providing methods for creating common UI components.
@@ -269,7 +269,7 @@ public interface BaseComponents {
      * @param height   the height of the image
      * @return a new Image instance
      */
-    default Image image(ResourceLocation location, int width, int height) {
+    default Image image(Identifier location, int width, int height) {
         return new Image(location, width, height);
     }
 

@@ -10,16 +10,16 @@ import de.clickism.clickui.layout.Align;import de.clickism.clickui.style.Border;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 //? if fabric {
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 //? if < 26.1
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+//import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 //? if >= 26.1
-//import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 //?} elif forge {
 //import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 //import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,23 +46,23 @@ public class TestMod implements BaseComponents {
 *///?}
 
     //? if >= 26.1
-    //public static final KeyMapping.Category CLICKUITESTMOD = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath("clickui","testmod"));
+    public static final KeyMapping.Category CLICKUITESTMOD = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("clickui","testmod"));
     private static KeyMapping openMenuKey;
 
     //? if fabric {
     @Override
     public void onInitializeClient() {
         //? if < 26.1
-        openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+        //openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
         //? if >= 26.1
-        //openMenuKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+        openMenuKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
             "key.clickuitestmod.open_menu",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_O,
             //? if < 26.1
-            "category.clickuitestmod"
+            //"category.clickuitestmod"
             //? if >= 26.1
-            //CLICKUITESTMOD
+            CLICKUITESTMOD
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openMenuKey.consumeClick()) {

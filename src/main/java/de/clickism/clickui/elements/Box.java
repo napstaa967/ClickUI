@@ -256,42 +256,34 @@ public class Box extends UiElement<Box> {
         graphics.enableScissor(x1, y1, x2, y2);
 
 
-        graphics.pose()
-                //$ if <26.1 '.pushPose();' else '.pushMatrix();'
-                .pushPose();
+        graphics.pose().pushMatrix();
         // Apply scroll offset
         scrollY(scrollY); // Clamp scrollY to valid range
         //? if < 26.1
-        graphics.pose().translate(0, -scrollY, 0);
+        //graphics.pose().translate(0, -scrollY, 0);
         //? if >= 26.1
-        //graphics.pose().translate(0, (int) -scrollY);
+        graphics.pose().translate(0, (int) -scrollY);
 
         // Render children
         for (var child : children()) {
             child.renderTree(context);
         }
 
-        graphics.pose()
-                //$ if <26.1 '.popPose();' else '.popMatrix();'
-                .popPose();
+        graphics.pose().popMatrix();
         // Disable scissor
         graphics.disableScissor();
 
         if (scrollable && isOverflowing()) {
-            graphics.pose()
-                    //$ if <26.1 '.pushPose();' else '.pushMatrix();'
-                    .pushPose();
+            graphics.pose().pushMatrix();
             // Render scrollbar on top of children
             //? if < 26.1
-            graphics.pose().translate(0, 0, 100);
+            //graphics.pose().translate(0, 0, 100);
             //? if >= 26.1
-            //graphics.pose().translate(0, 0);
+            graphics.pose().translate(0, 0);
 
             renderScrollbar(context);
 
-            graphics.pose()
-                    //$ if <26.1 '.popPose();' else '.popMatrix();'
-                    .popPose();
+            graphics.pose().popMatrix();
         }
 
     }
