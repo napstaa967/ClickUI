@@ -53,10 +53,16 @@ public class TooltipRenderer {
 
         // Render the tooltip at the calculated position
         var graphics = context.graphics();
-        graphics.pose().pushPose();
+        graphics.pose()
+                //$ if < 26.1 '.pushPose();' else '.pushMatrix();'
+                .pushPose();
+        //? if < 26.1
         graphics.pose().translate(tooltipX, tooltipY, TOOLTIP_Z_INDEX);
+        //? if >= 26.1
+        //graphics.pose().translate((int) tooltipX, (int) tooltipY);
 
         // Render background with padding
+        //? if < 26.1 {
         TooltipRenderUtil.renderTooltipBackground(
             context.graphics(),
             bounds.x(),
@@ -65,8 +71,20 @@ public class TooltipRenderer {
             bounds.height(),
             -1 // Render behind actual tooltip
         );
+        //?} elif >= 26.1 {
+        /*TooltipRenderUtil.extractTooltipBackground(
+                context.graphics(),
+                bounds.x(),
+                bounds.y(),
+                bounds.width(),
+                bounds.height(),
+                null
+        );
+        *///?}
         // Render tooltip content
         tooltip.render(context);
-        graphics.pose().popPose();
+        graphics.pose()
+                //$ if < 26.1 '.popPose();' else '.popMatrix();'
+                .popPose();
     }
 }

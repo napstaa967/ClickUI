@@ -3,6 +3,10 @@ package de.clickism.clickui.render.style;
 import de.clickism.clickui.UiElement;
 import de.clickism.clickui.render.RenderContext;
 import de.clickism.clickui.style.*;
+//? if >= 26.1 {
+/*import net.minecraft.client.renderer.RenderPipelines;
+import com.mojang.blaze3d.systems.RenderSystem;
+*///?}
 
 public class StyleRenderer {
     private final UiElement<?> element;
@@ -17,6 +21,7 @@ public class StyleRenderer {
         var style = element.elementStyle().resolve(new StyleContext(element, element.state()));
 
         // Apply alpha
+        //? if < 26.1
         context.graphics().setColor(1.0f, 1.0f, 1.0f, style.get(StyleProperty.ALPHA));
 
         // Render background
@@ -66,6 +71,7 @@ public class StyleRenderer {
         });
 
         // Revert alpha
+        //? if < 26.1
         context.graphics().setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 

@@ -7,6 +7,8 @@ import de.clickism.clickui.layout.Size;
 import de.clickism.clickui.render.RenderContext;
 import de.clickism.clickui.style.Border;
 import net.minecraft.resources.ResourceLocation;
+//? if >= 26.1
+//import net.minecraft.client.renderer.RenderPipelines;
 
 import java.util.function.Consumer;
 
@@ -27,11 +29,6 @@ public class Checkbox extends UiElement<Checkbox> {
     private static final ResourceLocation TEXTURE_SELECTED = ResourceLocation.withDefaultNamespace("widget/checkbox_selected");
     private static final ResourceLocation TEXTURE_HIGHLIGHTED = ResourceLocation.withDefaultNamespace("widget/checkbox_highlighted");
     private static final ResourceLocation TEXTURE = ResourceLocation.withDefaultNamespace("widget/checkbox");
-    /*private static final ResourceLocation TEXTURE_BOTH = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
-    private static final ResourceLocation TEXTURE_SELECTED = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
-    private static final ResourceLocation TEXTURE_HIGHLIGHTED = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
-    private static final ResourceLocation TEXTURE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");*/
-
     /**
      * Returns the proper texture for this state
      */
@@ -121,6 +118,7 @@ public class Checkbox extends UiElement<Checkbox> {
     public void render(RenderContext context) {
         var graphics = context.graphics();
         var bounds = this.bounds();
+        //? if < 26.1 {
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         // Adjust scale to fit in the checkbox size
@@ -128,6 +126,12 @@ public class Checkbox extends UiElement<Checkbox> {
         graphics.pose().translate(bounds.x(), bounds.y(), 0.0F);
         graphics.pose().scale((float) bounds.width() / SIZE, (float) bounds.height() / SIZE, 1.0F);
         graphics.pose().translate(-bounds.x(), -bounds.y(), 0.0F);
+        //?} elif >= 26.1 {
+        /*graphics.pose().pushMatrix();
+        graphics.pose().translate(bounds.x(), bounds.y());
+        graphics.pose().scale((float) bounds.width() / SIZE, (float) bounds.height() / SIZE);
+        graphics.pose().translate(-bounds.x(), -bounds.y());
+        *///?}
         // Render the checkbox texture based on its state (focused and checked)
         //? if < 1.21 {
         /*graphics.blit(
@@ -143,9 +147,13 @@ public class Checkbox extends UiElement<Checkbox> {
             64,
             64
         );
-        *///?} elif >= 1.21 {
-        graphics.blitSprite(resolve(), bounds.x(), bounds.y(), SIZE, SIZE);
-        //?}
         graphics.pose().popPose();
+        *///?} elif < 26.1 {
+        graphics.blitSprite(resolve(), bounds.x(), bounds.y(), SIZE, SIZE);
+        graphics.pose().popPose();
+        //?} elif >= 26.1 {
+        /*graphics.blitSprite(RenderPipelines.GUI_TEXTURED, resolve(), bounds.x(), bounds.y(), SIZE, SIZE);
+        graphics.pose().popMatrix();
+        *///?}
     }
 }

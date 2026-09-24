@@ -16,6 +16,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+//? if >= 26.1 {
+/*import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.input.InputWithModifiers;
+*///?}
+
 // Versioned dependencies
 //? if < 1.21{
 /*import net.minecraft.SharedConstants;
@@ -23,7 +28,24 @@ import java.util.function.Predicate;
 import net.minecraft.util.StringUtil;
 //?}
 
+//? if >= 26.1 {
+/*class KeyInput implements InputWithModifiers {
+    protected int inputval;
+    public KeyInput(int inputval) {
+        this.inputval = inputval;
+    }
 
+    @Override
+    public @InputConstants.Value int input() {
+        return inputval;
+    }
+
+    @Override
+    public @Modifiers int modifiers() {
+        return 0;
+    }
+}
+*///?}
 /**
  * An abstract class representing a text field UI element.
  * It provides basic functionality for text input, cursor movement, and text editing.
@@ -87,7 +109,10 @@ public abstract class AbstractField<S extends AbstractField<S>>
             if (!listening()) return;
             int newCursorPos = cursorPosAt(event.x(), event.y());
             cursorPos = Mth.clamp(newCursorPos, 0, value.length());
+            //? if < 26.1
             if (!Screen.hasShiftDown()) {
+            //? if >= 26.1
+            //if (!Minecraft.getInstance().hasShiftDown()) {
                 highlightPos = cursorPos;
             }
         });
@@ -486,7 +511,12 @@ public abstract class AbstractField<S extends AbstractField<S>>
      * @param direction the direction to move in, positive or negative
      */
     protected void moveCursor(int direction) {
+        //? if >= 26.1
+        //Minecraft minecraft = Minecraft.getInstance();
+        //? if < 26.1
         if (Screen.hasControlDown()) {
+        //? if >= 26.1
+        //if (minecraft.hasControlDown()) {
             // Move to next word
             cursorPos = wordPosition(direction);
         } else {
@@ -501,7 +531,10 @@ public abstract class AbstractField<S extends AbstractField<S>>
                 cursorPos = highlightStart();
             }
         }
+        //? if < 26.1
         if (!Screen.hasShiftDown()) {
+        //? if >= 26.1
+        //if (!minecraft.hasShiftDown()) {
             highlightPos = cursorPos;
         }
         handleCursorMove();
@@ -514,26 +547,42 @@ public abstract class AbstractField<S extends AbstractField<S>>
      * @return true if the key press was handled, false otherwise
      */
     protected boolean handleKeyPress(int code) {
+        //? if >= 26.1 {
+        /*KeyInput input = new KeyInput(code);
+        Minecraft instance = Minecraft.getInstance();
+        *///?}
+        //? if < 26.1
         if (Screen.isSelectAll(code)) {
+        //? if >= 26.1
+        //if (input.isSelectAll()) {
             // Move cursor to the end
             cursorPos = value.length();
             highlightPos = 0; // Highlight from start to end
             handleCursorMove();
             return true;
         }
+        //? if < 26.1
         if (Screen.isCopy(code)) {
+        //? if >= 26.1
+        //if (input.isCopy()) {
             // Copy highlighted text to clipboard
             var keyboard = Minecraft.getInstance().keyboardHandler;
             keyboard.setClipboard(highlightedText());
             return true;
         }
+        //? if < 26.1
         if (Screen.isPaste(code)) {
+        //? if >= 26.1
+        //if (input.isPaste()) {
             // Paste text from clipboard
             var keyboard = Minecraft.getInstance().keyboardHandler;
             insertText(keyboard.getClipboard());
             return true;
         }
+        //? if < 26.1
         if (Screen.isCut(code)) {
+        //? if >= 26.1
+        //if (input.isCut()) {
             // Copy highlighted text to clipboard and remove it from the value
             var keyboard = Minecraft.getInstance().keyboardHandler;
             keyboard.setClipboard(highlightedText());
@@ -557,13 +606,19 @@ public abstract class AbstractField<S extends AbstractField<S>>
             }
             case GLFW.GLFW_KEY_HOME -> {
                 cursorPos = 0;
+                //? if < 26.1
                 if (!Screen.hasShiftDown()) {
+                //? if >= 26.1
+                //if (!instance.hasShiftDown()) {
                     highlightPos = cursorPos;
                 }
             }
             case GLFW.GLFW_KEY_END -> {
                 cursorPos = value.length();
+                //? if < 26.1
                 if (!Screen.hasShiftDown()) {
+                //? if >= 26.1
+                //if (!instance.hasShiftDown()) {
                     highlightPos = cursorPos;
                 }
             }
@@ -728,8 +783,11 @@ public abstract class AbstractField<S extends AbstractField<S>>
         if (scrolling) {
             // Transform by display pos
             int offset = context.font().width(text.substring(0, displayPos));
+            //? if < 26.1
             graphics.pose().pushPose();
-            graphics.pose().translate(-offset, 0, 0);
+            //? if >= 26.1
+            //graphics.pose().pushMatrix();
+            graphics.pose().translate(-offset, 0/*? if < 26.1 {*/, 0/*?}*/);
         }
 
         try {
@@ -770,7 +828,10 @@ public abstract class AbstractField<S extends AbstractField<S>>
         } finally {
             // Undo transform
             if (scrolling) {
+                //? if < 26.1
                 graphics.pose().popPose();
+                //? if >= 26.1
+                //graphics.pose().popMatrix();
             }
         }
 

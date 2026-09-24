@@ -7,7 +7,10 @@ import de.clickism.clickui.render.RenderContext;
 import de.clickism.clickui.style.Border;
 import de.clickism.clickui.style.StyleProperty;
 import de.clickism.clickui.util.Util;
+//? if < 26.1
 import net.minecraft.client.renderer.RenderType;
+//? if >= 26.1
+//import net.minecraft.client.renderer.RenderPipelines;
 
 /**
  * A simple implementation of a text field with default styling and behavior.
@@ -115,10 +118,18 @@ public abstract class Field<S extends Field<S>> extends AbstractField<S> {
         }
         // Render text
         var color = textColor(placeholder);
-        graphics.drawString(context.font(), text, x, y, color, textShadow);
+        //? if < 26.1
+        graphics.drawString
+        //? if >= 26.1
+        //graphics.text
+                (context.font(), text, x, y, color, textShadow);
         // Render suggestion
         x += context.font().width(text);
-        graphics.drawString(context.font(), sugestion, x, y, UiColor.GRAY.color(), textShadow);
+        //? if < 26.1
+        graphics.drawString
+        //? if >= 26.1
+        //graphics.text
+                (context.font(), sugestion, x, y, UiColor.GRAY.color(), textShadow);
     }
 
     @Override
@@ -129,10 +140,19 @@ public abstract class Field<S extends Field<S>> extends AbstractField<S> {
             y -= 1; // Render slightly above the text for better visibility
             var width = 1;
             var height = context.font().lineHeight + 1;
-            context.graphics().fill(RenderType.guiOverlay(), x, y, x + width, y + height, color);
+            context.graphics().fill(
+                    //? if < 26.1
+                    RenderType.guiOverlay()
+                    //? if >= 26.1
+                    //RenderPipelines.GUI
+                    , x, y, x + width, y + height, color);
         } else {
             // Underscore cursor
-            context.graphics().drawString(context.font(), "_", x, y, color, false); // Never shadow
+            //? if < 26.1
+            context.graphics().drawString
+            //? if >= 26.1
+            //context.graphics().text
+                    (context.font(), "_", x, y, color, false); // Never shadow
         }
     }
 
@@ -140,7 +160,10 @@ public abstract class Field<S extends Field<S>> extends AbstractField<S> {
     protected void renderHighlight(RenderContext context, int x, int y, int width) {
         // Render highlight rectangle
         context.graphics().fill(
+            //? if < 26.1
             RenderType.guiTextHighlight(),
+            //? if >= 26.1
+            //RenderPipelines.GUI_TEXT_HIGHLIGHT,
             x - 1,
             y - 1,
             x + width,

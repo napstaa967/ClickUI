@@ -255,28 +255,43 @@ public class Box extends UiElement<Box> {
         var y2 = bounds.y() + bounds.height();
         graphics.enableScissor(x1, y1, x2, y2);
 
-        graphics.pose().pushPose();
+
+        graphics.pose()
+                //$ if <26.1 '.pushPose();' else '.pushMatrix();'
+                .pushPose();
         // Apply scroll offset
         scrollY(scrollY); // Clamp scrollY to valid range
+        //? if < 26.1
         graphics.pose().translate(0, -scrollY, 0);
+        //? if >= 26.1
+        //graphics.pose().translate(0, (int) -scrollY);
 
         // Render children
         for (var child : children()) {
             child.renderTree(context);
         }
 
-        graphics.pose().popPose();
+        graphics.pose()
+                //$ if <26.1 '.popPose();' else '.popMatrix();'
+                .popPose();
         // Disable scissor
         graphics.disableScissor();
 
         if (scrollable && isOverflowing()) {
-            graphics.pose().pushPose();
+            graphics.pose()
+                    //$ if <26.1 '.pushPose();' else '.pushMatrix();'
+                    .pushPose();
             // Render scrollbar on top of children
+            //? if < 26.1
             graphics.pose().translate(0, 0, 100);
+            //? if >= 26.1
+            //graphics.pose().translate(0, 0);
 
             renderScrollbar(context);
 
-            graphics.pose().popPose();
+            graphics.pose()
+                    //$ if <26.1 '.popPose();' else '.popMatrix();'
+                    .popPose();
         }
 
     }
@@ -288,7 +303,6 @@ public class Box extends UiElement<Box> {
 
     /**
      * Renders the scrollbar on the right side of the container.
-     * Mostly inspired by {@link net.minecraft.client.gui.components.AbstractSelectionList#render}
      *
      * @param context the render context to render with
      */

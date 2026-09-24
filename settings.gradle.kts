@@ -17,7 +17,7 @@ stonecutter {
     create(rootProject) {
         fun version(version: String, vararg loaders: String) {
             loaders.forEach {
-                if (it == "fabric-modern") {
+                if (it == "fabric-old") {
                     this.version("$version-fabric", version)
                         .buildscript = "build.$it.gradle.kts"
                 } else {
@@ -26,9 +26,10 @@ stonecutter {
                 }
             }
         }
-        version("1.20.1", "fabric", "forge")
-        version("1.21.1", "fabric", "neoforge")
-        version("26.1", "fabric-modern")
+        version("1.20.1", "fabric-old", "forge")
+        version("1.21.1", "fabric-old", "neoforge")
+        version("26.1", "fabric")
         vcsVersion = "1.20.1-fabric"
     }
+
 }

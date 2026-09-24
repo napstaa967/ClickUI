@@ -656,7 +656,11 @@ public abstract class UiElement<S extends UiElement<S>>
     public void renderDebugInfo(RenderContext context) {
         // Render the bounds of this element as a red outline
         var graphics = context.graphics();
-        graphics.renderOutline(
+        graphics
+                //? if < 26.1
+                .renderOutline(
+                //? if >= 26.1
+                //.outline(
             bounds().x(),
             bounds().y(),
             bounds().width(),

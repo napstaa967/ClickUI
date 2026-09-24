@@ -23,7 +23,10 @@ public record ScaledTextRenderer(
      */
     public void render(Component text, int x, int y, float scale, int color) {
         renderWithScale(x, y, scale, () -> {
-            context.graphics().drawString(Util.font(), text, 0, 0, color);
+            context.graphics()
+                    //$ if < 26.1 '.drawString' else '.text'
+                    .drawString
+                            (Util.font(), text, 0, 0, color);
         });
     }
 
@@ -38,19 +41,31 @@ public record ScaledTextRenderer(
      */
     public void render(FormattedCharSequence text, int x, int y, float scale, int color) {
         renderWithScale(x, y, scale, () -> {
-            context.graphics().drawString(Util.font(), text, 0, 0, color);
+            context.graphics()
+                    //$ if < 26.1 '.drawString' else '.text'
+                    .drawString
+                            (Util.font(), text, 0, 0, color);
         });
     }
 
     private void renderWithScale(int x, int y, float scale, Runnable render) {
         var graphics = context.graphics();
-        graphics.pose().pushPose();
+        graphics.pose()
+                //$ if < 26.1 '.pushPose();' else '.pushMatrix();'
+                .pushPose();
+        //? if < 26.1 {
         graphics.pose().translate(x, y, 0);
         graphics.pose().scale(scale, scale, 1);
+        //?} elif >= 26.1 {
+        /*graphics.pose().translate(x, y);
+        graphics.pose().scale(scale, scale);
+        *///?}
 
         render.run();
 
-        graphics.pose().popPose();
+        graphics.pose()
+                //$ if < 26.1 '.popPose();' else '.popMatrix();'
+                .popPose();
     }
 
     public float measureWidth(Component text, float scale) {

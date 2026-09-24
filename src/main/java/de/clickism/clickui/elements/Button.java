@@ -17,6 +17,8 @@ import net.minecraft.resources.ResourceLocation;
 //import static net.minecraft.client.gui.components.AbstractWidget.WIDGETS_LOCATION;
 //? if >= 1.21
 import net.minecraft.client.gui.components.WidgetSprites;
+//? if >= 26.1
+//import net.minecraft.client.renderer.RenderPipelines;
 
 /**
  * A simple UI element that can be clicked and displays a label.
@@ -116,7 +118,9 @@ public class Button extends UiElement<Button> {
         scrollTextIfNeeded(context);
         // Transform by displayOffsetX for scrolling effect
         var graphics = context.graphics();
-        graphics.pose().pushPose();
+        graphics.pose()
+                //$ if <26.1 '.pushPose();' else '.pushMatrix();'
+                .pushPose();
         var renderBounds = this.renderBounds();
         var scissorPadding = 2;
         graphics.enableScissor(
@@ -125,7 +129,10 @@ public class Button extends UiElement<Button> {
             renderBounds.x() + renderBounds.width() - scissorPadding,
             renderBounds.y() + renderBounds.height()
         );
+        //? if < 26.1
         graphics.pose().translate(-displayOffsetX, 0, 0);
+        //? if >= 26.1
+        //graphics.pose().translate(-displayOffsetX, 0);
         // Render label
         var fontScale = resolvedStyle().get(StyleProperty.FONT_SCALE);
         var renderer = new ScaledTextRenderer(context);
@@ -145,7 +152,9 @@ public class Button extends UiElement<Button> {
         renderer.render(label, textX, textY, fontScale, color);
         graphics.disableScissor();
         // Undo transform
-        graphics.pose().popPose();
+        graphics.pose()
+                //$ if <26.1 '.popPose();' else '.popMatrix();'
+                .popPose();
     }
 
     private void scrollTextIfNeeded(RenderContext context) {
@@ -181,8 +190,10 @@ public class Button extends UiElement<Button> {
             return; // Avoid division by zero or rendering issues if bounds are empty
         }
         // Override render to enable blending for semi-transparent textures
+        //? if < 26.1 {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        //?}
         // Render button texture
         try {
             //? if < 1.21 {
@@ -193,6 +204,8 @@ public class Button extends UiElement<Button> {
             );
             *///?} elif >= 1.21 {
             graphics.blitSprite(
+                    //? if >= 26.1
+                    //RenderPipelines.GUI_TEXTURED,
                     SPRITES.get(!state().disabled(), state().focused() || state().hovered()),
                     bounds.x(), bounds.y(), bounds.width(), bounds.height()
             );
@@ -203,6 +216,7 @@ public class Button extends UiElement<Button> {
             System.err.println("Error rendering button background: " + e.getMessage());
         }
         // Revert blending
+        //? if < 26.1
         RenderSystem.disableBlend();
     }
 
